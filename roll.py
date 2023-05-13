@@ -11,17 +11,21 @@ import random
 # Example:  'roll 3d6' - rolls 3 6-sided dice and returns the rolls and sum
 #           'roll 2d8 + 12' - rolls 2 8-sided dice and prints rolls and sum then adds 12 and returns a final result
 
+# This was a side project for learning basic programming.
+# A lot of this is going to be rafactored into a better program
+# for further coding experience and use.
+
+# TODO: Better parsing
+# TODO: Better error handling
+# TODO: Better code structure
 
 def main():
-
     # Check for too many or too few arguments
     if len(sys.argv) != 2 and len(sys.argv) != 4:
         print("Error: Invalid syntax")
         err_handle(1)
-
     # Attempt to parse the dice argument
     dice = sys.argv[1]
-
     try:
         values = dice.lower().split("d")
         qty = int(values[0])
@@ -35,8 +39,6 @@ def main():
     if len(sys.argv) == 2:
         rolls = dice_roll(qty, sides)
         results(rolls)
-        return None
-
     else:
         try:
             operator = sys.argv[2]
@@ -50,25 +52,18 @@ def main():
         rolls = dice_roll(qty, sides) 
         total = modify(sum(rolls), operator, modifier)
         results(rolls, operator, modifier, total)
-        return None
 
-    return None
-    
 
 def dice_roll(qty, sides):
     """Takes an argument for number of dice to roll and number of sides then rolls the dice and returns a list of rolls"""
-    rolls = []
-    total = 0
-    for i in range(qty):
-        rolls.append(random.randint(1, sides))
+    return [random.randint(1, sides) for i in range(qty)]
 
-    return rolls
 
 def modify(value, operator, mod):
     if operator == "+":
         return value + mod
-    else:
-        return value - mod
+    return value - mod
+
 
 def err_handle(errno):
     print()
@@ -79,25 +74,30 @@ def err_handle(errno):
     print("\t\t\"roll 2d8 + 12\" - Rolls 2 8-sided dice and returns the rolls and sum and then adds the modifier to the sum")
     sys.exit(errno)
 
+
 def results(rolls, operator=None, modifier=None, total=None):
+    """Prints the results of a roll."""
+
+    # TODO: Better output
+
     print("--------------------------------")
     print("You rolled: ", end="")
+
     for i, roll in enumerate(rolls):
         if i > 0:
             print(", ", end="")
         print(roll, end="")
+
     print("\n")
     print(f"For a total of: {sum(rolls)}")
     
-    if operator != None and modifier != None and total != None:
+    if operator and modifier and total:
         print(f"\n{sum(rolls)} {operator} {modifier} = {total}")
-
     else:
         total = sum(rolls)
 
     print("--------------------------------")
     print(f"Final result = {total}\n")
-    return None
 
 if __name__ == "__main__":
     main()
